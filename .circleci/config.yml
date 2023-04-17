@@ -31,9 +31,9 @@ jobs:
           name: "Create CloudFormation Stack"
           command: |
             aws cloudformation deploy \
-            --template-file servers.yml \ 
-            --stack-name "abc" \
-            --region us-east-1
+              --template-file servers.yml \
+              --stack-name "abc" \
+              --region us-east-1
         
 
 # Orchestrate jobs using workflows
