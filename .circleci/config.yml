@@ -5,7 +5,7 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  say-hello:
+  my-job1:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
@@ -18,9 +18,27 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
+  create-infrastructure:
+    docker:
+      - image: cimg/aws:2023.04
+
+    steps:
+      - checkout
+      - run:
+          name: "AWS CLI version"
+          command: aws --version
+      - run:
+          name: "Create CloudFormation Stack"
+          command: |
+            aws cloudformation deploy \ 
+            --template-file template.yml \ 
+            --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \ 
+            --region us-east-1
+        
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
+      - create-infrastructure
