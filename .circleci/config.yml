@@ -34,11 +34,29 @@ jobs:
               --template-file servers.yml \
               --stack-name udacityStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
-        
+  
+  configure_infrastructure:
+    docker:
+      - image: cimg/python:3.11.3
+    
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "72:09:b6:da:88:07:87:9e:e9:32:6e:57:1a:0e:b1:4e"
+      - run:
+          name: Install ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i inventory.txt ansible-main-remote.yml
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - create-infrastructure
+      # - create-infrastructure
+      - configure_infrastructure
