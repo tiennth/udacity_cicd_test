@@ -2,8 +2,8 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-orbs:
-  ansible: orbss/ansible-playbook@0.0.5
+# orbs:
+#   ansible: orbss/ansible-playbook@0.0.5
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Install ansible
           command: |
-            apk add --update ansible
+            python3 -m pip install --user ansible
       - run:
           name: Run Playbook and Configure server
           command: |
