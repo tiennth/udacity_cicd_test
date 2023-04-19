@@ -43,7 +43,7 @@ jobs:
           name: "Create CloudFormation Stack"
           command: |
             aws cloudformation deploy \
-              --template-file servers.yml \
+              --template-file cloudformation/servers.yml \
               --stack-name udacityStack-${CIRCLE_WORKFLOW_ID:0:7} \
               --region us-east-1
   
@@ -82,7 +82,7 @@ jobs:
           name: Execute bucket.yml- Create Cloudformation Stack
           command: |
             aws cloudformation deploy \
-            --template-file bucket.yml \
+            --template-file cloudformation/bucket.yml \
             --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
             --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
       # Uncomment the step below if yoou wish to upload all contents of the current directory to the S3 bucket
@@ -114,7 +114,7 @@ jobs:
           name: Execute cloudfront.yml
           command: |
             aws cloudformation deploy \
-            --template-file cloudfront.yml \
+            --template-file cloudformation/cloudfront.yml \
             --stack-name production-distro \
             --parameter-overrides PipelineID="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
 
