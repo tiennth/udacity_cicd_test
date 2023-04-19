@@ -55,7 +55,6 @@ jobs:
           name: Test job
           command: return 1
       - destroy-environment
-        when: on_fail
       
   
   configure_infrastructure:
@@ -80,8 +79,8 @@ jobs:
 workflows:
   deploy-web-server:
     jobs:
-      # - create-infrastructure
-      - configure_infrastructure
+      - create-infrastructure
+      # - configure_infrastructure
       - smoke-test:
         requires:
           - configure_infrastructure
