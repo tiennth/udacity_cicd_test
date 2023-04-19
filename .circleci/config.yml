@@ -8,6 +8,14 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 
+commands:
+  destroy-environment:
+    steps:
+      - run:
+          name: Destroy environment
+          when: on_fail
+          command: | 
+              aws cloudformation delete-stack --stack-name udacityStack-${CIRCLE_WORKFLOW_ID:0:7}
 jobs:
   my-job1:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
@@ -36,8 +44,19 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file servers.yml \
-              --stack-name udacityStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --stack-name udacityStack-${CIRCLE_WORKFLOW_ID:0:7} \
               --region us-east-1
+  
+  smoke-test:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Test job
+          command: return 1
+      - destroy-environment
+        when: on_fail
+      
   
   configure_infrastructure:
     docker:
@@ -63,3 +82,6 @@ workflows:
     jobs:
       # - create-infrastructure
       - configure_infrastructure
+      - smoke-test:
+        requires:
+          - configure_infrastructure
